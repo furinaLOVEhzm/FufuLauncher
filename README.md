@@ -1,7 +1,8 @@
 # 可爱的芙芙 — Minecraft Java版启动器
 
 > 署名:可爱的芙芙  
-> 版本:1.0.0.0  
+> 版本:1.8.1.2
+  
 > Copyright © 可爱的芙芙
 
 一个使用 C# WPF (.NET 8) + C++ 原生 DLL 构建的 Minecraft Java 版启动器,对标 PCL2 全部能力。
