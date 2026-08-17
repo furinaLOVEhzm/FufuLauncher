@@ -1,0 +1,158 @@
+<Page x:Class="FufuLauncher.Views.HomePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      mc:Ignorable="d"
+      d:DesignHeight="680" d:DesignWidth="1000"
+      Loaded="HomePage_OnLoaded">
+    <Grid Margin="26,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ============ 上部:版本展示 + 账号 ============ -->
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左:大字当前版本 -->
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="6,0,0,0">
+                <TextBlock Text="当前游戏版本" FontSize="12" Opacity="0.6"
+                           Foreground="{DynamicResource AppForeground}"/>
+                <TextBlock x:Name="TxtInstanceName" Text="未选择版本" FontSize="34" FontWeight="Bold"
+                           Foreground="{DynamicResource AppForeground}" Margin="0,6,0,0"
+                           TextTrimming="CharacterEllipsis"/>
+                <StackPanel Orientation="Horizontal" Margin="2,10,0,0">
+                    <Border Style="{DynamicResource TypeChip}">
+                        <TextBlock x:Name="TxtMcVersion" Text="Minecraft -" FontSize="11"
+                                   Foreground="{DynamicResource AppForeground}"/>
+                    </Border>
+                    <Border x:Name="LoaderChip" Style="{DynamicResource MetaChip}" Margin="8,0,0,0"
+                            Visibility="Collapsed">
+                        <TextBlock x:Name="TxtLoader" Text="" FontSize="11" Foreground="White"/>
+                    </Border>
+                    <TextBlock x:Name="TxtLastPlayed" Text="" FontSize="11" Opacity="0.5"
+                               Foreground="{DynamicResource AppForeground}" VerticalAlignment="Center"
+                               Margin="12,0,0,0"/>
+                </StackPanel>
+
+                <!-- 版本切换 -->
+                <StackPanel Orientation="Horizontal" Margin="2,18,0,0">
+                    <TextBlock Text="选择版本" FontSize="12" Opacity="0.6" VerticalAlignment="Center"
+                               Foreground="{DynamicResource AppForeground}" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="CbInstance" Width="240" Style="{DynamicResource FufuCombo}"
+                              SelectionChanged="CbInstance_SelectionChanged"/>
+                    <Button Content="⬇ 下载新版本" Style="{DynamicResource SecondaryButton}"
+                            Margin="10,0,0,0" Click="GoDownload_Click"/>
+                </StackPanel>
+            </StackPanel>
+
+            <!-- 右:账号卡片(点击打开账号管理弹窗) -->
+            <Button Grid.Column="1" VerticalAlignment="Center" Cursor="Hand"
+                    Click="OpenAccountDialog_Click">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="Button">
+                                    <ContentPresenter/>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.92"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+                <Border x:Name="CardBd" Style="{DynamicResource Card}" Padding="16,14" MinWidth="230">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <!-- 头像:方形像素风(MC 头像本身就是像素方块,不做圆形裁剪,
+                                     NearestNeighbor 缩放保持像素锐利不糊) -->
+                                <Grid Grid.Column="0" Width="48" Height="48">
+                                    <Border CornerRadius="6" Background="{DynamicResource SubtleFillBrush}">
+                                        <TextBlock x:Name="TxtAvatarPlaceholder" Text="👤" FontSize="20"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                    <Border CornerRadius="6" ClipToBounds="True">
+                                        <Image x:Name="ImgAvatar" Stretch="UniformToFill"
+                                               RenderOptions.BitmapScalingMode="NearestNeighbor"/>
+                                    </Border>
+                                </Grid>
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="12,0,8,0">
+                                    <TextBlock x:Name="TxtAccountName" Text="未登录" FontSize="14" FontWeight="SemiBold"
+                                               Foreground="{DynamicResource AppForeground}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock x:Name="TxtAccountType" Text="点击管理账号" FontSize="11" Opacity="0.6"
+                                               Foreground="{DynamicResource AppForeground}" Margin="0,3,0,0"/>
+                                </StackPanel>
+                                <TextBlock Grid.Column="2" Text="›" FontSize="18" Opacity="0.5"
+                                           Foreground="{DynamicResource AppForeground}" VerticalAlignment="Center"/>
+                            </Grid>
+                </Border>
+            </Button>
+        </Grid>
+
+        <!-- ============ 底部启动栏 ============ -->
+        <Border Grid.Row="1" Style="{DynamicResource Card}" Padding="18,16" Margin="0,0,0,6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Java 选择(全局生效) -->
+                <StackPanel Grid.Column="0" Margin="0,0,18,0">
+                    <TextBlock Text="☕ Java 运行时(全局)" FontSize="11" Opacity="0.6" Margin="2,0,0,5"
+                               Foreground="{DynamicResource AppForeground}"/>
+                    <ComboBox x:Name="CbJava" Width="230" Style="{DynamicResource FufuCombo}"
+                              SelectionChanged="CbJava_SelectionChanged"/>
+                </StackPanel>
+
+                <!-- 状态提示 -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,14,0" MaxWidth="300">
+                    <TextBlock x:Name="TxtStatus" Text="选择 Java 并校验后即可启动" FontSize="11.5"
+                               Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"/>
+                    <!-- 游戏进程内存监控:堆 + 堆外拆分展示(不只显示堆内存欺骗用户) -->
+                    <TextBlock x:Name="TxtGameMemory" FontSize="11" Margin="0,3,0,0" Visibility="Collapsed"
+                               Foreground="{DynamicResource SecondaryTextBrush}" TextWrapping="Wrap"
+                               ToolTip="进程总占用 = 任务管理器实测;Java 堆 = Xmx 固定堆上限;堆外 = 总占用 − 堆(含 DirectBuffer/Native/GPU 资源)"/>
+                    <ProgressBar x:Name="LaunchProgress" Height="4" Margin="0,6,0,0" Visibility="Collapsed"
+                                 Style="{DynamicResource FufuProgress}" IsIndeterminate="True"/>
+                </StackPanel>
+
+                <Border Grid.Column="2"/>
+
+                <!-- 校验完整性(置于 Java 选择与启动按钮之间) -->
+                <Button x:Name="BtnVerify" Grid.Column="3" Content="🛡 校验游戏版本完整性"
+                        Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center"
+                        Margin="0,0,10,0" Click="BtnVerify_Click"/>
+
+                <!-- 强制启动 -->
+                <Button x:Name="BtnForceLaunch" Grid.Column="4" Content="⚡ 强制启动"
+                        Style="{DynamicResource SecondaryButton}" VerticalAlignment="Center"
+                        Margin="0,0,10,0" Click="BtnForceLaunch_Click"
+                        ToolTip="跳过完整性校验直接启动"/>
+
+                <!-- 启动游戏 -->
+                <Button x:Name="BtnLaunch" Grid.Column="5" Content="▶  启动游戏"
+                        Style="{DynamicResource LaunchButton}" Padding="34,13"
+                        VerticalAlignment="Center" Click="BtnLaunch_Click"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

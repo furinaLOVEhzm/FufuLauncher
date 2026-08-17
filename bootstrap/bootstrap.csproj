@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>FufuBootstrap</RootNamespace>
+    <AssemblyName>fufu-bootstrap</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <!-- 不生成 中文 路径相关 XML 文档,避免编码问题 -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <!-- 一次性引导工具,不打包 -->
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,43 @@
+{
+    "FixedFileInfo": {
+        "FileVersion": {
+            "Major": 1,
+            "Minor": 8,
+            "Patch": 1,
+            "Build": 2
+        },
+        "ProductVersion": {
+            "Major": 1,
+            "Minor": 8,
+            "Patch": 1,
+            "Build": 2
+        },
+        "FileFlagsMask": "3f",
+        "FileFlags": "00",
+        "FileOS": "040004",
+        "FileType": "01",
+        "FileSubType": "00"
+    },
+    "StringFileInfo": {
+        "Comments": "可爱的芙芙 Minecraft启动器 - 启动打包器",
+        "CompanyName": "可爱的芙芙",
+        "FileDescription": "可爱的芙芙 MC-Java版启动器",
+        "FileVersion": "1.8.1.2",
+        "InternalName": "FufuLauncher",
+        "LegalCopyright": "Copyright © 可爱的芙芙",
+        "LegalTrademarks": "",
+        "OriginalFilename": "FufuLauncher.exe",
+        "PrivateBuild": "",
+        "ProductName": "可爱的芙芙 Minecraft启动器",
+        "ProductVersion": "1.8.1.2",
+        "SpecialBuild": ""
+    },
+    "VarFileInfo": {
+        "Translation": {
+            "LangID": "0804",
+            "CharsetID": "04B0"
+        }
+    },
+    "IconPath": "",
+    "ManifestPath": ""
+}

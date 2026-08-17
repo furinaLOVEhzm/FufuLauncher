@@ -1,0 +1,40 @@
+# 知识卡导出索引文件
+schema_version: 1
+locale: zh-CN
+branch: Q0DeR-MaG1C-BrAnCh-Fo2-NoN-GiT-Or-No-C0MmIt
+nodes_managed: true
+exported_at: "2026-08-02T10:29:17Z"
+modules:
+    "":
+        dir_name: 可爱的芙芙 Minecraft 启动器解决方案
+        title: 可爱的芙芙 Minecraft 启动器解决方案
+        scope:
+            - README.md
+            - .gitignore
+            - FufuLauncher.sln
+        source_files: []
+        children:
+            - packager
+            - tools_go_runtime
+        depends_on: []
+        related_to: []
+    packager:
+        dir_name: FufuLauncher Windows 启动打包器
+        title: FufuLauncher Windows 启动打包器
+        scope:
+            - packager/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: tools_go_runtime
+    tools_go_runtime:
+        dir_name: Go 运行时与工具链环境
+        title: Go 运行时与工具链环境
+        scope:
+            - .tools/
+        source_files: []
+        children: []
+        depends_on: []
+        related_to:
+            - path: packager

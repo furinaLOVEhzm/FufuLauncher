@@ -1,0 +1,58 @@
+## 可爱的芙芙 Minecraft启动器 - Git忽略规则
+
+# Visual Studio 临时文件
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# 编译输出
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+# 构建产物
+*.dll
+*.pdb
+*.exe
+*.lib
+*.exp
+*.ilk
+*.idb
+*.obj
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+
+# 游戏运行时数据(不纳入版本控制)
+.minecraft/
+instances/
+*.minecraft
+
+# 用户配置与缓存
+*.log
+*.tmp
+*.bak
+*.cache
+appdata/
+
+# IDE
+.idea/
+*.swp
+*~

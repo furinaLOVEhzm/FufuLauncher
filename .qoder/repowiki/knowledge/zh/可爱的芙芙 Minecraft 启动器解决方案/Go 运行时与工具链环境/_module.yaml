@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: tools_go_runtime
+title: Go 运行时与工具链环境
+scope:
+    - .tools/
+source_files: []
+depends_on: []
+related_to:
+    - path: packager

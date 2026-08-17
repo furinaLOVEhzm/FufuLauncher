@@ -1,0 +1,9 @@
+schema_version: 1
+module_path: packager
+title: FufuLauncher Windows 启动打包器
+scope:
+    - packager/
+source_files: []
+depends_on: []
+related_to:
+    - path: tools_go_runtime
