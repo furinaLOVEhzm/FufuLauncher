@@ -14,7 +14,7 @@
 | 项目 | 要求 |
 |------|------|
 | IDE | Visual Studio 2022 (17.8+) |
-| .NET | .NET 8 Desktop Runtime + SDK |
+| .NET | .NET 8 Desktop Runtime + SDK准备更换.NET 10 |
 | C++ | C++ 桌面开发组件 (v143 工具集) |
 | Windows SDK | 10.0 (19041+) |
 | 操作系统 | Windows 10 64位 / Windows 11 |
@@ -22,7 +22,7 @@
 ### 安装 VS2022 组件
 
 在 Visual Studio Installer 中勾选:
-- ✅ **.NET 桌面开发** (包含 .NET 8 SDK、WPF 工作负载)
+- ✅ **.NET 桌面开发** (包含 .NET 8 SDK，WPF，.NET10 工作负载)
 - ✅ **使用 C++ 的桌面开发** (包含 v143 生成工具、Windows 10 SDK)
 
 ### 构建步骤
