@@ -1,0 +1,156 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- ================================================================
+       FufuLauncher · 工程配置(底层重写:严格 .NET 10 + 自包含发布)
+       - 目标框架唯一锁定 net10.0-windows,禁止回退其它 TFM
+       - 自包含(SelfContained)写死在工程层:Debug/Release/Publish
+         一律携带完整 .NET 10 Desktop Runtime,任何构建产物都不依赖
+         目标机器安装 .NET
+       - 固定 win-x64,禁止 any-cpu / 可移植输出
+       ================================================================ -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>false</UseWindowsForms>
+    <Platforms>x64</Platforms>
+    <PlatformTarget>x64</PlatformTarget>
+
+    <!-- 固定运行时标识:win-x64 独占 -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+
+    <!-- 自包含硬约束:所有构建/发布产物均携带完整 .NET 10 运行时 -->
+    <SelfContained>true</SelfContained>
+
+    <!-- 发布形态:松散部署(2026-08-29 由单文件改回,启动提速根治)。
+         【为何不用单文件】单文件每次版本更新都要把 175MB bundle 自解压到 %TEMP%(本机实测前奏 4.6s,
+         老机器/杀软干预下放大到分钟级),秒开的关键正是无自解压。松散部署后 exe 与运行库 dll 同目录,
+         启动零解压、零临时缓存,每次启动都等于"缓存命中"态。
+         注:llama/ggml/cuda 原生库本就松散落地,布局不变 -->
+    <PublishSingleFile>false</PublishSingleFile>
+    <!-- 不裁剪:WPF 反射依赖多,裁剪会破坏 WPF/反射/动态加载 -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <!-- ReadyToRun 启动提速(2026-08-28 开启,追求秒开体验):
+         R2R 把 WPF/框架/应用代码预编译为原生码,启动免 JIT 热编译。
+         【坑点】FufuRelease.pubxml 存在同名属性且优先级更高,两处必须同步修改(见 8.14)
+         注:松散部署下不用 Composite——复合映像与松散 IL 程序集双份落地会平白多出数百 MB -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+    <PublishReadyToRunComposite>false</PublishReadyToRunComposite>
+    <!-- 仅中文资源 -->
+    <SatelliteResourceLanguages>zh-CN</SatelliteResourceLanguages>
+
+    <!-- C# 14(.NET 10 默认),保持 latest 跟随 SDK -->
+    <LangVersion>latest</LangVersion>
+    <!-- 允许 unsafe:泡芙助理 DXGI 显存探测(COM 虚表函数指针)需要 -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!-- 程序集信息 -->
+    <RootNamespace>FufuLauncher</RootNamespace>
+    <AssemblyName>FufuLauncher</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+
+    <!-- tub 目录 logo 编译为 exe 主图标(桌面/任务栏/窗口左上角统一) -->
+    <ApplicationIcon>assets\app.ico</ApplicationIcon>
+
+    <!-- exe 文件版本资源元信息(只写入文件属性,不含数字签名) -->
+    <Version>1.9.8.6</Version>
+    <AssemblyVersion>1.9.8.6</AssemblyVersion>
+    <FileVersion>1.9.8.6</FileVersion>
+    <InformationalVersion>1.9.8.6</InformationalVersion>
+    <Title>FufuLauncher MC-Java版启动器</Title>
+    <Company>FufuLauncher</Company>
+    <Product>FufuLauncher Minecraft启动器</Product>
+    <Copyright>Copyright © FufuLauncher</Copyright>
+    <Description>FufuLauncher MC-Java版启动器(.NET 10 自包含)</Description>
+    <Authors>FufuLauncher</Authors>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+  </PropertyGroup>
+
+  <!-- 兜底 logo 以 Resource 方式嵌入 exe(外部 tub\logo.png 缺失时降级使用) -->
+  <ItemGroup>
+    <Resource Include="assets\embedded-logo.png" />
+  </ItemGroup>
+
+  <!-- 七套预设主题背景素材嵌入 exe(启动时按需释放到数据目录 tupian\jm,用户可自行替换) -->
+  <ItemGroup>
+    <Resource Include="assets\themes\*.png" />
+  </ItemGroup>
+
+  <!-- 加载器官方 Logo(Fabric/Forge/NeoForge/Quilt/OptiFine)嵌入 exe,版本/实例列表与加载器卡片展示 -->
+  <ItemGroup>
+    <Resource Include="assets\loaders\*.png" />
+  </ItemGroup>
+
+  <!-- 将 C++ 原生 DLL 复制到输出目录(固定取 x64\Release 产物)
+       注意:dotnet build 默认 $(Platform)=AnyCPU,而工程固定 win-x64,
+       故此处先把 Platform 归一为 x64 再做存在性判定,否则条件永远失效;
+       C++ DLL 需先用 VS/MSBuild 编译 native\FufuNative\FufuNative.vcxproj(Release|x64)产出,
+       缺失时运行时自动降级纯托管实现 -->
+  <PropertyGroup>
+    <FufuNativePlatform>x64</FufuNativePlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\native\FufuNative\$(FufuNativePlatform)\Release\FufuNative.dll"
+          Condition="Exists('..\..\native\FufuNative\$(FufuNativePlatform)\Release\FufuNative.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <!-- 禁止打进单文件:运行时按 runtimes\win-x64\native\ 路径探测,必须以松散文件落地 -->
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <Link>runtimes\win-x64\native\FufuNative.dll</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- 泡芙助理 CUDA 运行时补齐(LLamaSharp 0.27.0 包缺陷修复):
+       ① cuda12 目录缺 ggml-cpu.dll(ggml.dll 强依赖,缺失导致 llama.dll 加载失败→静默回退 CPU);
+       ② ggml-cuda.dll 依赖 cudart64_12.dll + cublas64_12.dll(后者又强依赖 cublasLt64_12.dll),
+         取自 NVIDIA 官方 CUDA 12.8 redist,固化在 tools\cuda_rt\ 随构建携带。
+       全部松散落地(ExcludeFromSingleFile),供 AiEngineService WithLibrary 显式指定 -->
+  <ItemGroup>
+    <None Include="$(NuGetPackageRoot)llamasharp.backend.cpu\0.27.0\LLamaSharpRuntimes\win-x64\native\avx2\ggml-cpu.dll"
+          Condition="Exists('$(NuGetPackageRoot)llamasharp.backend.cpu\0.27.0\LLamaSharpRuntimes\win-x64\native\avx2\ggml-cpu.dll')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <Link>runtimes\win-x64\native\cuda12\ggml-cpu.dll</Link>
+    </None>
+    <None Include="..\..\tools\cuda_rt\*.dll" Condition="Exists('..\..\tools\cuda_rt')">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <Link>runtimes\win-x64\native\cuda12\%(Filename)%(Extension)</Link>
+    </None>
+  </ItemGroup>
+
+  <!-- 发布时把 runtimes\ 下全部原生库(NuGet 携带的 llama/ggml/cuda + 上面补齐项)保持松散落地:
+       松散同目录布局保证 llama.dll→ggml→cudart/cublas 依赖链直接命中,
+       AiEngineService 的 WithLibrary 按 AppContext.BaseDirectory\runtimes\... 显式定位。
+       (ExcludeFromSingleFile 在松散部署下为无害空操作,保留以兼容历史配置) -->
+  <Target Name="KeepNativeLibsLoose" BeforeTargets="_ComputeFilesToBundle">
+    <ItemGroup>
+      <ResolvedFileToPublish Condition="$([System.String]::Copy('%(ResolvedFileToPublish.TargetPath)').StartsWith('runtimes'))"
+                             ExcludeFromSingleFile="true" />
+    </ItemGroup>
+  </Target>
+
+  <!-- 依赖一律对齐 .NET 10 版本线;
+       本地 AI 推理:LLamaSharp(llama.cpp 绑定) + CPU 后端 + CUDA12 后端(RTX30〜50 系),
+       运行时 CUDA 不可用自动回退 CPU -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.*" />
+    <!-- 微软账号令牌深度加密使用 Windows DPAPI(ProtectedData):
+         .NET 10 内置自动可用(NU1510),无需显式包引用 -->
+    <!-- WMI 查询(泡芙助理显存探测 DXGI 失败时的兜底阈值判定) -->
+    <PackageReference Include="System.Management" Version="9.0.*" />
+    <PackageReference Include="LLamaSharp" Version="0.27.0" />
+    <PackageReference Include="LLamaSharp.Backend.Cpu" Version="0.27.0" />
+    <PackageReference Include="LLamaSharp.Backend.Cuda12.Windows" Version="0.27.0" />
+    <!-- WebP 图片解码降级(2026-09-30):Modrinth/CurseForge 模组图标绝大多数为 WebP,
+         而 WPF 底层 WIC 默认不带 WebP 解码器(Win8/Win11 尤甚),导致"下载成功却不显示"。
+         ImageSharp 为纯托管库,内置 WebP 解码;仅在原生 WIC 解码抛异常时降级启用(见 ImageAssets.DecodeBytes),
+         PNG/JPG/GIF 仍走原生路径零回归。许可证 Six Labors Split License,个人独立开发项目免费使用。 -->
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+  </ItemGroup>
+
+</Project>

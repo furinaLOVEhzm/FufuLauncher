@@ -1,0 +1,45 @@
+# FufuLauncher 代码分析配置
+# 说明:dotnet build 默认级别已 0 警告;以下规则属于 Visual Studio 高档位
+# (recommended/all)分析器的风格建议,与本项目代码风格取舍不符,统一降级为
+# 不提示,避免 IDE 侧出现大量橙色标记。实质性问题(空引用/资源释放等)仍保留。
+
+root = true
+
+[*.{cs,vb}]
+# ---- 命名/结构类风格建议(本项目刻意采用) ----
+# CA1716 命名空间 "Next" 与保留字冲突:FufuLauncher.Next 为既定架构命名
+dotnet_diagnostic.CA1716.severity = none
+# CA1822 建议标记 static:UI 工厂方法保持实例签名便于后续演化
+dotnet_diagnostic.CA1822.severity = none
+# CA1852 建议 sealed:内部模型类不强制
+dotnet_diagnostic.CA1852.severity = none
+# CA1859 建议收窄返回类型:UI 工厂刻意面向基类(UIElement/Brush)编程
+dotnet_diagnostic.CA1859.severity = none
+# CA1001 含可释放字段的类型应实现 IDisposable:UI Deck/服务生命周期随窗口结束
+dotnet_diagnostic.CA1001.severity = none
+
+# ---- 区域设置类(本应用仅中文 Windows 桌面场景,无全球化需求) ----
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1310.severity = none
+dotnet_diagnostic.CA1311.severity = none
+
+# ---- 性能微优化类(启动器场景无热点意义) ----
+dotnet_diagnostic.CA1863.severity = none
+dotnet_diagnostic.CA1869.severity = none
+dotnet_diagnostic.CA1850.severity = none
+dotnet_diagnostic.CA2020.severity = none
+
+# ---- 其它 ----
+# CA2201 异常类型具体化:错误归类入口刻意接收通用 Exception
+dotnet_diagnostic.CA2201.severity = none
+# CA5350/CA5351 MD5/SHA1 仅用于离线 UUID 与文件标识哈希,非安全用途
+dotnet_diagnostic.CA5350.severity = none
+dotnet_diagnostic.CA5351.severity = none
+# CA1805 配置模型刻意显式默认值(可读性优先)
+dotnet_diagnostic.CA1805.severity = none
+# CA1707 旧版兼容字段下划线命名(_old* 为历史迁移字段)
+dotnet_diagnostic.CA1707.severity = none
+# CA2101 P/Invoke 封送:Win32 互操作刻意采用默认 CharSet
+dotnet_diagnostic.CA2101.severity = none
+# CA1806 TryParse 失败取默认值为刻意行为(版本号宽松比较)
+dotnet_diagnostic.CA1806.severity = none

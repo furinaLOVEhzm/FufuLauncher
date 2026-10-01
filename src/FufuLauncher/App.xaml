@@ -1,0 +1,23 @@
+﻿<Application x:Class="FufuLauncher.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/Theme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <!-- 全局主题化悬停提示:跟随当前主题(深浅色一致),替代系统默认白底黑字 -->
+            <Style TargetType="ToolTip">
+                <Setter Property="Background" Value="{DynamicResource T.SurfaceAlt}"/>
+                <Setter Property="Foreground" Value="{DynamicResource T.Foreground}"/>
+                <Setter Property="BorderBrush" Value="{DynamicResource T.Border}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="9,6"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="MaxWidth" Value="420"/>
+                <Setter Property="HasDropShadow" Value="True"/>
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

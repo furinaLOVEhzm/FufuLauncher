@@ -1,0 +1,33 @@
+# 可爱芙芙 Minecraft 启动器 — 白名单模式:默认全部忽略,只纳入下列源码/工程文件
+*
+
+# 版本控制与编辑器配置
+!.gitignore
+!.gitattributes
+!.editorconfig
+
+# 项目说明与许可
+!README.md
+!LICENSE
+
+# 解决方案与 NuGet 工程
+!*.sln
+!nuget.config
+
+# 启动器源码(排除编译产物)
+!src/
+!src/**
+src/**/[Bb]in/
+src/**/[Oo]bj/
+src/**/*.dll
+src/**/*.exe
+src/**/*.pdb
+src/**/*.user
+src/**/*.suo
+
+# 登录/账号相关源码 — 不上传
+src/FufuLauncher/Services/AuthService.cs
+src/FufuLauncher/Services/AccountService.cs
+src/FufuLauncher/Next/UI/AccountsDeck.cs
+
+# 若后续希望开源部署脚本/网页,再在此处逐个加回 !scripts/ 等

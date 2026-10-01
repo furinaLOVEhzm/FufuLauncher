@@ -1,0 +1,25 @@
+# Normalize line endings: store LF in repo, checkout platform-native.
+* text=auto
+
+# Source / project files
+*.cs    text eol=crlf
+*.xaml  text eol=crlf
+*.csproj text eol=crlf
+*.sln   text eol=crlf
+*.manifest text eol=crlf
+*.config text eol=crlf
+*.editorconfig text eol=lf
+
+# Docs
+*.md    text
+LICENSE text
+
+# Binaries — never diff / merge
+*.png   binary
+*.ico   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.dll   binary
+*.exe   binary
+*.pdb   binary
